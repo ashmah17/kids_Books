@@ -5,6 +5,7 @@ import unlock from '../assets/unlock.svg'
 import address from '../assets/address.svg'
 import { Link, useNavigate } from 'react-router-dom'
 import BackButton from './BackButton'
+import validator from 'validator'
 
 const Login = () => {
     const [Luser, setuser] = useState('');
@@ -20,16 +21,23 @@ const Login = () => {
     
 
     const handleSubmit=()=>{
-       
         const storedInfo =JSON.parse(localStorage.getItem('book')) || [];
         const userFound =storedInfo.find(user => user.email === Luser && user.password === Lpassword);
         if(!Luser){
             alert('Please provide Email')
-        }else if(!Lpassword){
+        }else if (!validator.isEmail(Luser)){
+            alert('Please provide correct Email')
+        }
+
+        else if(!Lpassword){
             alert('Please provide Password')
         }else if(userFound){
-            navigate('/Dashboard')
+            navigate('/Dashboard');
+            localStorage.setItem('loggedUser', JSON.stringify(userFound))
+        }else{
+            alert('User not found!!!')
         }
+
         
     }
 
@@ -53,7 +61,7 @@ const Login = () => {
                      </span>
                      <input
                         onChange={handlePassword} 
-                        type='text' 
+                        type='password' 
                         placeholder='Password' 
                         className="w-[97%] pl-[3rem] outline-none rounded-xl ml-[3%] bg-gray-200 p-3" />
                  </span>
